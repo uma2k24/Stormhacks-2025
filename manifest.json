@@ -3,6 +3,7 @@
     "name": "Eleven Narrator",
     "version": "1.0.0",
     "description": "Narrate highlighted text using ElevenLabs TTS.",
+    "permissions": ["contextMenus", "activeTab", "tts"],
     "action": {
         "default_title": "Eleven Narrator",
         "default_popup": "popup.html"
@@ -20,5 +21,10 @@
             "suggested_key":{"default": "Ctrl+Shift+Y"},
             "description": "Narrate currently selected text."
         }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
     }
 }
