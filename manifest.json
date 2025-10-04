@@ -2,8 +2,9 @@
     "manifest_version": 3,
     "name": "Eleven Narrator",
     "version": "1.0.0",
-    "description": "Narrate highlighted text using ElevenLabs TTS.",
+    "description": "Narrate highl   ighted text using ElevenLabs TTS.",
     "permissions": ["contextMenus", "activeTab", "tts"],
+    "host_permissions": ["https://api.elevenlabs.io/*"],
     "action": {
         "default_title": "Eleven Narrator",
         "default_popup": "popup.html"
