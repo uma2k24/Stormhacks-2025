@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "Eleven Narrator",
+    "version": "1.0.0",
+    "description": "Narrate highlighted text using ElevenLabs TTS.",
+    "action": {
+        "default_title": "Eleven Narrator",
+        "default_popup": "popup.html"
+    },
+    "background": {"service_worker": "background.js"},
+    "content_scripts":[
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "run_at": "document_idle"
+        }
+    ],
+    "commands": {
+        "narrate-selection":{
+            "suggested_key":{"default": "Ctrl+Shift+Y"},
+            "description": "Narrate currently selected text."
+        }
+    }
+}
