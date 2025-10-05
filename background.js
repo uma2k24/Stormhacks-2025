@@ -1,9 +1,11 @@
 // -----------------------------
 // Config
 // -----------------------------
-const API_KEY = "sk_32454f6661293ee996467313112e60f063501985571290d0"; // hardcoded ElevenLabs key
+const EL_API_KEY = "sk_32454f6661293ee996467313112e60f063501985571290d0"; // hardcoded ElevenLabs key
+const GCP_API_KEY = "AIzaSyA-goMvDh6LwDhUUiJqJBCl_RYlbhTZReA"; // hardcoded GCP API key
 const MODEL_ID = "eleven_multilingual_v2";
-const API_BASE_URL = "https://api.elevenlabs.io/v1/text-to-speech";
+const EL_API_BASE_URL = "https://api.elevenlabs.io/v1/text-to-speech";
+const GCP_API_BASE_URL = "https://translation.googleapis.com/language/translate/v3";
 const MAX_CHAR_LENGTH = 5000;
 
 const VOICE_MAP = {
@@ -98,7 +100,7 @@ async function handleNarrationRequest(rawText, tabId, mode = "Oliver") {
 
 
     try {
-        const { audioBase64, mimeType } = await requestNarrationFromElevenLabs(text, API_KEY, voiceId);
+        const { audioBase64, mimeType } = await requestNarrationFromElevenLabs(text, EL_API_KEY, voiceId);
         await sendToTab(tabId, { type: "PLAY_AUDIO", audio: audioBase64, mimeType });
     } catch (err) {
         const message = err instanceof Error ? err.message : "Unable to narrate selection.";
@@ -112,7 +114,7 @@ async function handleNarrationRequest(rawText, tabId, mode = "Oliver") {
 // API call
 // -----------------------------
 async function requestNarrationFromElevenLabs(text, apiKey, voiceId) {
-    const url = `${API_BASE_URL}/${voiceId}`;
+    const url = `${EL_API_BASE_URL}/${voiceId}`;
     const response = await fetch(url, {
         method: "POST",
         headers: {
