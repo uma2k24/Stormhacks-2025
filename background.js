@@ -56,7 +56,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         // Getting stored speaker, default to Oliver
         const { selectedMode } = await chrome.storage.local.get("selectedMode");
         const modeToUse = selectedMode || "Oliver";
-        chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE", mode: modeToUse });
+        // Getting stored language, default to "en"
+        const { selectedLang } = await chrome.storage.local.get("selectedLang");
+        const langToUse = selectedLang || "en";
+        chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE", mode: modeToUse, lang: langToUse });
     }
 });
 
@@ -66,10 +69,13 @@ chrome.commands.onCommand.addListener(async (command) => {
         // Getting stored speaker, default to Oliver
         const { selectedMode } = await chrome.storage.local.get("selectedMode");
         const modeToUse = selectedMode || "Oliver";
+        // Getting stored language, default to "en"
+        const { selectedLang } = await chrome.storage.local.get("selectedLang");
+        const langToUse = selectedLang || "en";
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const [tab] = tabs;
             if (tab?.id !== undefined) {
-                chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE", mode: modeToUse });
+                chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE", mode: modeToUse, lang: langToUse });
             }
         });
     }
