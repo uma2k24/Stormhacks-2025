@@ -3,6 +3,7 @@
 // -----------------------------
 const API_KEY = "sk_32454f6661293ee996467313112e60f063501985571290d0"; // hardcoded ElevenLabs key
 const VOICE_ID = "L1aJrPa7pLJEyYlh3Ilq"; // Oliver's voice (Default?)
+let CURR_VOICE_ID = VOICE_ID; // allow changing voice later if needed
 const MODEL_ID = "eleven_multilingual_v2";
 const API_BASE_URL = "https://api.elevenlabs.io/v1/text-to-speech";
 const MAX_CHAR_LENGTH = 5000;
@@ -64,6 +65,7 @@ chrome.commands.onCommand.addListener((command) => {
 // Messaging from content script
 // -----------------------------
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    // If the message is a narration request
     if (message?.type === "NARRATE") {
         const tabId = sender.tab?.id;
         if (tabId === undefined) {
@@ -74,6 +76,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         handleNarrationRequest(message.text, tabId)
             .then(() => sendResponse({ ok: true }))
             .catch((error) => sendResponse({ ok: false, error: error.message }));
+        return true;
+    }
+    // If the message is for changing the narrator
+    else if (message?.type === "SET_VOICE_ID") {
+        CURR_VOICE_ID = message.voice_id;
+        console.log("Voice changed to:", CURRENT_VOICE_ID);
+        sendResponse({ ok: true });
         return true;
     }
 });
