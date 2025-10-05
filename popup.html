@@ -79,6 +79,14 @@
             filter: none !important;
             transform: none !important;
         }
+        select {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-weight: 600;
+        }
+        
     </style>
 </head>
 <body>
@@ -90,6 +98,15 @@
     <div class="row">
         <button id="pause">Pause</button>
         <button id="resume">Resume</button>
+    </div>
+
+    <div class="row">
+        <label for="mode" style="align-self:center;">Mode:</label>
+        <select id="mode" title="Choose mode">
+            <option value="standard" selected>Standard</option>
+            <option value="dyslexia">Dyslexia-friendly</option>
+            <option value="high-contrast">High contrast</option>
+        </select>
     </div>
 
     <script src="popup.js"></script>
