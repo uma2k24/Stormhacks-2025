@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     readButton?.addEventListener("click", () => {
         const selectedMode = modeSelect?.value || "Oliver"; // "Oliver", "Paige", or "Annie"
+        console.log("Popup sending mode:", selectedMode);
+
         sendToActiveTab({
             type: "GET_SELECTION_AND_NARRATE",
             mode: selectedMode

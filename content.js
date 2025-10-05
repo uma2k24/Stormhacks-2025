@@ -69,12 +69,18 @@ function highlightSelection() {
 }
 
 // Reworked this function to not be dependent on highlight (we lose highlight in extension menu)
-function sendSelection(passedText) {
+function sendSelection(passedText, mode = "Oliver") {
     const text = passedText || window.getSelection()?.toString()?.trim();
-    console.log("Sending selection to background:", text);
+    console.log("Sending selection to background:", text, "mode:", mode);
     if (!text) return;
-    chrome.runtime.sendMessage({ type: "NARRATE", text });
+
+    chrome.runtime.sendMessage({
+        type: "NARRATE",
+        text,
+        mode
+    });
 }
+
 
 
 
@@ -132,7 +138,7 @@ chrome.runtime.onMessage.addListener((msg) => {
     switch (msg?.type) {
         case "GET_SELECTION_AND_NARRATE":
             // Use selectionText from the background if provided
-            sendSelection(msg.selectionText);
+            sendSelection(msg.selectionText, msg.mode);
             break;
         case "PLAY_AUDIO":
             if (msg.audio) {

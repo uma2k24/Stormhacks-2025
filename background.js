@@ -85,6 +85,9 @@ async function handleNarrationRequest(rawText, tabId, mode = "Oliver") {
     }
 
     const voiceId = VOICE_MAP[mode] || VOICE_MAP["Oliver"];
+    console.log("handleNarrationRequest called with mode:", mode, "voiceId:", voiceId);
+
+
 
     try {
         const { audioBase64, mimeType } = await requestNarrationFromElevenLabs(text, API_KEY, voiceId);
