@@ -68,12 +68,16 @@ function highlightSelection() {
     return { text };
 }
 
-function sendSelection() {
-    const highlighted = highlightSelection();
-    const text = highlighted?.text;
+// Reworked this function to not be dependent on highlight (we lose highlight in extension menu)
+function sendSelection(passedText) {
+    const text = passedText || window.getSelection()?.toString()?.trim();
+    console.log("Sending selection to background:", text);
     if (!text) return;
     chrome.runtime.sendMessage({ type: "NARRATE", text });
 }
+
+
+
 
 function stopAudioPlayback({ clear = true } = {}) {
     if (activeAudio) {
@@ -123,9 +127,12 @@ function playAudioFromBase64(base64Audio, mimeType = "audio/mpeg") {
 }
 
 chrome.runtime.onMessage.addListener((msg) => {
+    // More debugging...
+    console.log("Content script received message:", msg);
     switch (msg?.type) {
         case "GET_SELECTION_AND_NARRATE":
-            sendSelection();
+            // Use selectionText from the background if provided
+            sendSelection(msg.selectionText);
             break;
         case "PLAY_AUDIO":
             if (msg.audio) {
