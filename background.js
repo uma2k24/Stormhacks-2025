@@ -14,6 +14,26 @@ const VOICE_MAP = {
     "Annie": "XW70ikSsadUbinwLMZ5w"
 };
 
+async function googleTranslateAuto({text, target}){
+    if(!GCP_API_KEY) 
+        throw new Error("Missing Google API key");
+    if(!target || target === "none")
+        return {translated: text, detected: null};
+
+    const MAX_CHARS = 5000;
+    const chars = [];
+    for(let i = 0; i < text.length; i += MAX_CHARS){
+        chars.push(text.slice(i, i+MAX_CHARS));
+    }
+
+    const qs = new URLSearchParams({key:GCP_API_KEY, target});
+    const resp = await fetch(`${GCP_API_BASE_URL}?${qs.toString()}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({q: chars, format: "text"})
+    })
+}
+
 // -----------------------------
 // Context menu
 // -----------------------------
