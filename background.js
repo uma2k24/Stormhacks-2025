@@ -28,25 +28,33 @@ function createContextMenu() {
 chrome.runtime.onInstalled.addListener(createContextMenu);
 chrome.runtime.onStartup.addListener(createContextMenu);
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+// Made this async for getting stored mode
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId === "narrate-selection" && tab?.id !== undefined) {
-        chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE" });
+        // Getting stored speaker, default to Oliver
+        const { selectedMode } = await chrome.storage.local.get("selectedMode");
+        const modeToUse = selectedMode || "Oliver";
+        chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE", mode: modeToUse });
     }
 });
 
-chrome.commands.onCommand.addListener((command) => {
+// Making this async for getting stored mode
+chrome.commands.onCommand.addListener(async (command) => {
     if (command === "narrate-selection") {
+        // Getting stored speaker, default to Oliver
+        const { selectedMode } = await chrome.storage.local.get("selectedMode");
+        const modeToUse = selectedMode || "Oliver";
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             const [tab] = tabs;
             if (tab?.id !== undefined) {
-                chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE" });
+                chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION_AND_NARRATE", mode: modeToUse });
             }
         });
     }
 });
 
 // -----------------------------
-// Messaging from content/popup
+// Messaging from content/popup (Just content, popup passes through content)
 // -----------------------------
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!message?.type) return;

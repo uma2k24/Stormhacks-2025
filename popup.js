@@ -1,4 +1,4 @@
-// Functions for saving selected mode to chrome storage
+// Functions for saving selected mode to chrome storage, can't use await in popup or content scripts
 function getStoredSelectedMode() {
     return new Promise((resolve) => {
         chrome.storage.local.get("selectedMode", (result) => {
