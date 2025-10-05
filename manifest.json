@@ -4,7 +4,8 @@
     "version": "1.0.0",
     "description": "Narrate highlighted text using ElevenLabs TTS.",
     "permissions": ["contextMenus", "activeTab", "tts", "storage"],
-    "host_permissions": ["https://api.elevenlabs.io/*"],
+    "host_permissions": ["https://translation.googleapis.com/*",
+        "https://api.elevenlabs.io/*"],
     "action": {
         "default_title": "Eleven Narrator",
         "default_popup": "popup.html"
