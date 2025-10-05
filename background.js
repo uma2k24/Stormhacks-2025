@@ -31,7 +31,26 @@ async function googleTranslateAuto({text, target}){
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({q: chars, format: "text"})
-    })
+    });
+
+    if(!resp.ok){
+        const errorText = await tryReadError(resp);
+        throw new Error(`Google translate failed: ${resp.status} ${errorText}`);
+    }
+
+    const data = await resp.json();
+    const trs = (data?.data?.translations) || [];
+    const translated = trs.map(t => t.translatedText).join("");
+
+    const counts = {};
+    trs.forEach(t => {
+        const d = t.detectedSourceLanguage;
+        if (d) counts[d] = (counts[d] || 0) + 1;
+    });
+    const detected = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || null;
+
+    return {translated, detected};
+
 }
 
 // -----------------------------
