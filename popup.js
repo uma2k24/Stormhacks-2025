@@ -1,9 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
+// Functions for saving selected mode to chrome storage
+function getStoredSelectedMode() {
+    return new Promise((resolve) => {
+        chrome.storage.local.get("selectedMode", (result) => {
+            resolve(result.selectedMode || "Oliver"); // default to Oliver
+        });
+    });
+}
+
+function setStoredSelectedMode(mode) {
+    chrome.storage.local.set({ selectedMode: mode });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
     const readButton = document.getElementById("read");
     const stopButton = document.getElementById("stop");
     const pauseButton = document.getElementById("pause");
     const resumeButton = document.getElementById("resume");
     const modeSelect = document.getElementById("mode");
+
+    // Load saved mode from storage, had to change document event listener to async
+    const storedMode = await getStoredSelectedMode();
+    if (modeSelect) modeSelect.value = storedMode;
+
+    // Listener for detecting change in mode dropdown
+    modeSelect.addEventListener("change", () => {
+        const selectedMode = modeSelect.value;
+        setStoredSelectedMode(selectedMode);
+    });
 
     readButton?.addEventListener("click", () => {
         const selectedMode = modeSelect?.value || "Oliver"; // "Oliver", "Paige", or "Annie"
@@ -12,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sendToActiveTab({
             type: "GET_SELECTION_AND_NARRATE",
             mode: selectedMode
-        });
+        }); 
     });
 
     stopButton?.addEventListener("click", () => {
